@@ -4,10 +4,6 @@ class Api::V1::ProductsController < ApplicationController
     render json: @products
   end
 
-  def new
-    @product = Product.new
-  end
-
   def create
     @product = Product.create(product_params)
     if @product.save
@@ -17,12 +13,20 @@ class Api::V1::ProductsController < ApplicationController
     end
   end
 
-  def edit
+  def update
     @product = Product.find(params[:id])
+    if @product.update(product_params)
+      render json: @product
+    else
+      render json: {errors: @product.errors }, status: 422
+    end
   end
 
-  def update
-    @product = Product.update(params[:id], product_params)
+  def destroy
+    @product = Product.find(params[:id])
+    @product.destroy
+
+    head :no_content
   end
 
   private
