@@ -3,13 +3,18 @@ class Api::V1::ProductsController < ApplicationController
     @products = Product.all
     render json: @products
   end
-  
+
   def new
     @product = Product.new
   end
 
   def create
     @product = Product.create(product_params)
+    if @product.save
+      render json: @product
+    else
+      render json: {errors: @product.errors }, status: 422
+    end
   end
 
   def edit
